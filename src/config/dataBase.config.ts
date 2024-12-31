@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
-
 @Injectable()
 export class PostgresConfig implements TypeOrmOptionsFactory {
   constructor(private readonly configService: ConfigService) {}
@@ -16,8 +15,7 @@ export class PostgresConfig implements TypeOrmOptionsFactory {
       database: this.configService.get<string>('DB_NAME'),
       entities: ['dist/**/*.entity{.ts,.js}'],
       migrations: ['dist/**/migration/*{.ts,.js}'],
-      synchronize:
-        this.configService.get<string>('DB_SYNC').toLowerCase() == 'true',
+      synchronize: this.configService.get<string>('DB_SYNC') == 'true',
       extra: { max: 30 },
     };
   }
