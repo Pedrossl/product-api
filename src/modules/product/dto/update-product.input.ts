@@ -1,8 +1,10 @@
+import { IsUUID } from 'class-validator';
 import { CreateProductInput } from './create-product.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
+import { InputType, Field, PartialType } from '@nestjs/graphql';
 
-@InputType()
+@InputType('UpdateProductInput')
 export class UpdateProductInput extends PartialType(CreateProductInput) {
-  @Field(() => Int)
-  id: number;
+  @Field(() => String)
+  @IsUUID()
+  id: string;
 }
