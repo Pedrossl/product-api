@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserInput } from './dtos/create-user.input';
+import { USER_NOT_CREATED } from 'src/common/constants/error.constants';
 
 @Injectable()
 export class UserService {
@@ -20,7 +21,7 @@ export class UserService {
     await this.userRepository.save(user);
 
     if (!user) {
-      throw new Error('User not created');
+      throw new Error(USER_NOT_CREATED);
     }
     return user;
   }
