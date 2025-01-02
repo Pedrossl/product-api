@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { AuthInput } from './dtos/auth.input';
 import { AuthType } from './dtos/auth.type';
 import { compareSync } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../user/entities/user.entity';
+import { INVALID_CREDENTIALS } from 'src/common/constants/error.constants';
 
 @Injectable()
 export class AuthService {
@@ -17,15 +18,11 @@ export class AuthService {
     console.log(input);
 
     const user = await this.userService.findByEmail(input.email);
-    if (!user) {
-      console.error('User not found');
-      return null;
-    }
 
-    const isValidPassword = compareSync(input.password, user.password);
+    const isValidPassword = user && compareSync(input.password, user.password);
+
     if (!isValidPassword) {
-      console.error('Invalid password');
-      throw new Error('Invalid password');
+      throw new UnauthorizedException(INVALID_CREDENTIALS);
     }
 
     const token = await this.jwtToken(user);
