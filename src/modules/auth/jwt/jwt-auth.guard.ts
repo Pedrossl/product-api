@@ -9,6 +9,10 @@ import { Reflector } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import {
+  INVALID_CONTEXT_TYPE,
+  TOKEN_NOT_FOUND,
+} from 'src/common/constants/error.constants';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -30,7 +34,7 @@ export class JwtAuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      throw new UnauthorizedException('Token not found');
+      throw new UnauthorizedException(TOKEN_NOT_FOUND);
     }
 
     try {
@@ -40,7 +44,7 @@ export class JwtAuthGuard implements CanActivate {
       request.user = decoded;
       return true;
     } catch (error) {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException(TOKEN_NOT_FOUND);
     }
   }
 
@@ -53,7 +57,7 @@ export class JwtAuthGuard implements CanActivate {
       const gqlContext = GqlExecutionContext.create(context);
       return gqlContext.getContext().req;
     } catch {
-      throw new UnauthorizedException('Invalid context type');
+      throw new UnauthorizedException(INVALID_CONTEXT_TYPE);
     }
   }
 

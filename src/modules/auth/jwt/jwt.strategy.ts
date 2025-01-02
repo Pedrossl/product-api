@@ -7,6 +7,10 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
+import {
+  TOKEN_NOT_FOUND,
+  USER_NOT_FOUND,
+} from 'src/common/constants/error.constants';
 import { UserService } from 'src/modules/user/user.service';
 
 @Injectable()
@@ -21,7 +25,7 @@ export class JwtAuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      throw new UnauthorizedException('Token not found');
+      throw new UnauthorizedException(TOKEN_NOT_FOUND);
     }
 
     try {
@@ -33,13 +37,13 @@ export class JwtAuthGuard implements CanActivate {
 
       const user = await this.getUser(payload.sub);
       if (!user) {
-        throw new UnauthorizedException("User doesn't exist");
+        throw new UnauthorizedException(USER_NOT_FOUND);
       }
 
       request.user = user;
       return true;
     } catch (error) {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException(TOKEN_NOT_FOUND);
     }
   }
 
