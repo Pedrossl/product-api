@@ -6,14 +6,14 @@ export class CreateUserInput {
   @IsEmail()
   @Field(() => String)
   @IsNotEmpty({
-    message: 'O campo "email" não pode ser vazio',
+    message: 'The "email" field cannot be empty',
   })
   email: string;
 
   @IsString()
   @Field(() => String)
   @IsNotEmpty({
-    message: 'O campo "password" não pode ser vazio',
+    message: 'The "password" field cannot be empty',
   })
   password: string;
 }
