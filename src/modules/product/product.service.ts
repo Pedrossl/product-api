@@ -1,26 +1,58 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Product } from './entities/product.entity';
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
+import { ProductDTO } from './dto/product.dto';
 
 @Injectable()
 export class ProductService {
-  create(createProductInput: CreateProductInput) {
-    return 'This action adds a new product';
+  constructor(
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
+  ) {}
+
+  async create(input: CreateProductInput): Promise<ProductDTO> {
+    const product = this.productRepository.create(input);
+    return this.productRepository.save(product);
   }
 
-  findAll() {
-    return `This action returns all product`;
+  async findAll(): Promise<ProductDTO[]> {
+    const products = await this.productRepository.find();
+    console.log(products[0].price);
+
+    return products.map((product) => ({
+      ...product,
+      price: Number((product.price / 100).toFixed(2)),
+    }));
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: string): Promise<ProductDTO> {
+    const product = await this.productRepository.findOne({ where: { id } });
+    if (!product) {
+      throw new NotFoundException(`Product with ID "${id}" not found`);
+    }
+    return {
+      ...product,
+      price: this.fromCents(product.price),
+    };
   }
 
-  update(id: number, updateProductInput: UpdateProductInput) {
-    return `This action updates a #${id} product`;
+  async update(input: UpdateProductInput): Promise<ProductDTO> {
+    const product = await this.productRepository.findOne({
+      where: { id: input.id },
+    });
+    if (!product) {
+      throw new NotFoundException(`Product with ID "${input.id}" not found`);
+    }
+    Object.assign(product, {
+      ...input,
+    });
+    return this.productRepository.save(product);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  private fromCents(price: number): number {
+    return price / 100;
   }
 }
