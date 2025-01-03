@@ -41,6 +41,8 @@ The **Product API** is a service developed in **NestJS** utilizing **TypeORM** a
 
 ## **Endpoints**
 
+All endpoints, queries and mutations are in the Product_Endpoints.json file
+
 ### **Auth**
 | Method | Endpoint   | Description                              |
 |--------|------------|------------------------------------------|
