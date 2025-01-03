@@ -1,26 +1,27 @@
-# **Documentação do Projeto: Product API**
 
-## **Visão Geral**
-A **Product API** é um serviço desenvolvido em **NestJS** que utiliza **TypeORM** e **PostgreSQL** para gerenciar produtos, categorias e preços. A API suporta autenticação com **JWT** e fornece funcionalidades completas de CRUD para gerenciamento de usuários e produtos. A aplicação também inclui suporte a paginação e documentação interativa com **Swagger**.
+# **Project Documentation: Product API**
 
----
-
-## **Tecnologias Utilizadas**
-- **NestJS**: Framework para construção de APIs escaláveis e estruturadas.
-- **TypeORM**: ORM para manipulação de banco de dados.
-- **GraphQL** e **REST**: Protocolo de comunicação utilizado nos endpoints.
-- **PostgreSQL**: Banco de dados relacional.
-- **Docker**: Contêineres para gerenciamento do ambiente.
-- **Swagger**: Documentação interativa para REST API.
-- **JWT (JSON Web Token)**: Autenticação segura.
+## **Overview**
+The **Product API** is a service developed in **NestJS** utilizing **TypeORM** and **PostgreSQL** to manage products, categories, and prices. The API supports authentication with **JWT** and provides full CRUD functionality for managing users and products. The application also includes pagination support and interactive documentation with **Swagger**.
 
 ---
 
-## **Instalação**
-### **Com Docker**
-1. Certifique-se de que o Docker está instalado.
-2. Renomeie o arquivo `.env.example` para `.env`:
-3. Atualize as variáveis de ambiente no arquivo `.env` conforme necessário:
+## **Technologies Used**
+- **NestJS**: Framework for building scalable and structured APIs.
+- **TypeORM**: ORM for database manipulation.
+- **GraphQL** and **REST**: Protocols used for communication in endpoints.
+- **PostgreSQL**: Relational database.
+- **Docker**: Container management for environment setup.
+- **Swagger**: Interactive documentation for the REST API.
+- **JWT (JSON Web Token)**: Secure authentication.
+
+---
+
+## **Installation**
+### **Using Docker**
+1. Ensure Docker is installed.
+2. Rename the `.env.example` file to `.env`:
+3. Update the environment variables in the `.env` file as needed:
    ```
    API_PORT=4000
    DB_HOST=postgres
@@ -30,55 +31,87 @@ A **Product API** é um serviço desenvolvido em **NestJS** que utiliza **TypeOR
    DB_NAME=product_api
    JWT_SECRET=your_jwt_secret
    ```
-4. Suba os contêineres com o Docker Compose:
+4. Start the containers using Docker Compose:
    ```bash
    docker-compose up --build
    ```
-5. A API estará acessível em `http://localhost:4000`.
+5. The API will be accessible at `http://localhost:4000`.
+
 ---
 
 ## **Endpoints**
 
 ### **Auth**
-| Método | Endpoint   | Descrição                                      |
-|--------|------------|----------------------------------------------|
-| POST   | `/auth`    | Autentica um usuário e retorna o token JWT.   |
+| Method | Endpoint   | Description                              |
+|--------|------------|------------------------------------------|
+| POST   | `/auth`    | Authenticates a user and returns a JWT.  |
 
-**Exemplo de Corpo da Requisição**:
+**Request Body Example**:
 ```json
 {
   "email": "user@example.com",
   "password": "password123"
 }
+```
+
 ---
 
 ### **User**
-| Método | Endpoint       | Descrição                                     |
-|--------|----------------|-----------------------------------------------|
-| GET    | `/users`       | Retorna uma lista de usuários.                |
-| POST   | `/users`       | Cria um novo usuário.                         |
-| GET    | `/users/:id`   | Retorna informações de um usuário específico. |
-| PATCH  | `/users/:id`   | Atualiza os dados de um usuário.              |
-| DELETE | `/users/:id`   | Remove um usuário.                            |
+| Method | Endpoint       | Description                              |
+|--------|----------------|------------------------------------------|
+| GET    | `/users`       | Returns a list of users.                |
+| POST   | `/users`       | Creates a new user.                     |
+| GET    | `/users/:id`   | Retrieves information of a specific user. |
+| PATCH  | `/users/:id`   | Updates user data.                      |
+| DELETE | `/users/:id`   | Removes a user.                         |
 
 ---
 
-## **Autenticação**
-Os endpoints protegidos requerem um token JWT no cabeçalho da requisição:
+## **Authentication**
+Protected endpoints require a JWT token in the request header:
 
-**Exemplo de Cabeçalho**:
+**Header Example**:
 ```
 Authorization: Bearer <token>
 ```
 
 ---
 
-## **Paginação**
-A API suporta paginação com parâmetros opcionais `offset` e `limit` na mutation listagem de produtos:
+## **Pagination**
+The API supports pagination with optional `offset` and `limit` parameters:
+
+**Request Example**:
+```
+GET /products?offset=0&limit=10
+```
+
+**Response Example**:
+```json
+{
+  "nodes": [
+    {
+      "id": "123e4567-e89b-12d3-a456-426614174000",
+      "name": "Product A",
+      "price": 12.99
+    },
+    {
+      "id": "123e4567-e89b-12d3-a456-426614174001",
+      "name": "Product B",
+      "price": 15.99
+    }
+  ],
+  "pageInfo": {
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "totalCount": 20
+  }
+}
+```
+
 ---
 
 ## **Swagger**
-A documentação interativa está disponível em:
+Interactive documentation is available at:
 ```
 http://localhost:4000/docs
 ```
@@ -86,45 +119,46 @@ http://localhost:4000/docs
 ---
 
 ## **GraphQL Playground**
-A interface GraphQL está disponível em:
+GraphQL interface is available at:
 ```
 http://localhost:4000/graphql
 ```
 
 ---
 
-## **Estrutura do Projeto**
+## **Project Structure**
 ```
 src/
-├── app.module.ts         # Módulo raiz
-├── main.ts               # Bootstrap da aplicação
-├── modules/              # Módulos da aplicação
-│   ├── auth/             # Módulo de autenticação
-│   ├── user/             # Módulo de usuários REST
-│   ├── products/         # Módulo de produtos GRAPHQL
-├── common/               # Código compartilhado (utilitários, constantes)
-├── database/             # Configuração e migrações do banco de dados
+├── app.module.ts         # Root module
+├── main.ts               # Application bootstrap
+├── modules/              # Application modules
+│   ├── auth/             # Authentication module
+│   ├── user/             # User module
+│   ├── products/         # Products module
+├── common/               # Shared utilities and constants
+├── database/             # Database configuration and migrations
 ```
 
 ---
-## **Mutations e Queries no GraphQL**
+
+## **GraphQL Mutations and Queries**
 
 ### **Products**
 
-| Nome              | Tipo     | Descrição                          |
-| ----------------- | -------- | ---------------------------------- |
-| `createProduct`   | Mutation | Cria um novo produto.              |
-| `findAllProducts` | Query    | Lista todos os produtos paginados. |
-| `findProductById` | Query    | Busca um produto pelo ID.          |
-| `updateProduct`   | Mutation | Atualiza um produto existente.     |
-| `removeProduct`   | Mutation | Remove um produto pelo ID.         |
+| Name               | Type     | Description                          |
+|--------------------|----------|--------------------------------------|
+| `createProduct`    | Mutation | Creates a new product.              |
+| `findAllProducts`  | Query    | Lists all products with pagination. |
+| `findProductById`  | Query    | Retrieves a product by ID.          |
+| `updateProduct`    | Mutation | Updates an existing product.        |
+| `removeProduct`    | Mutation | Removes a product by ID.            |
 
-### Exemplo de Mutation para Criar Produto
-
+### Example Mutation to Create Product
+The price should be sent in cents as it is an integer type.
 ```graphql
 mutation {
   createProduct(input: {
-    name: "Produto A",
+    name: "Product A",
     category: FOOD,
     price: 1299
   }) {
@@ -135,8 +169,7 @@ mutation {
 }
 ```
 
-### Exemplo de Query para Listar Produtos
-
+### Example Query to List Products
 ```graphql
 query {
   findAllProducts(paging: {
@@ -157,13 +190,12 @@ query {
 }
 ```
 
-### Exemplo de Mutation para Atualizar Produto
-
+### Example Mutation to Update Product
 ```graphql
 mutation {
   updateProduct(update: {
     id: "123e4567-e89b-12d3-a456-426614174000",
-    name: "Produto A Atualizado",
+    name: "Updated Product A",
     price: 1599
   }) {
     id
@@ -173,8 +205,7 @@ mutation {
 }
 ```
 
-### Exemplo de Mutation para Remover Produto
-
+### Example Mutation to Remove Product
 ```graphql
 mutation {
   removeProduct(id: "123e4567-e89b-12d3-a456-426614174000")
