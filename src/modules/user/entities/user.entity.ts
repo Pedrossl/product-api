@@ -1,4 +1,5 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, HideField, ObjectType } from '@nestjs/graphql';
+import { Exclude } from 'class-transformer';
 import { encodePassword } from 'src/common/helpers/encode-password';
 import { BaseEntity } from 'src/modules/bases/entities/base.entity';
 import { Column, Entity } from 'typeorm';
@@ -16,5 +17,7 @@ export class User extends BaseEntity {
     transformer: encodePassword,
   })
   @Field(() => String)
+  @HideField()
+  @Exclude()
   password: string;
 }
