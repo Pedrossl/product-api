@@ -14,10 +14,11 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(input: AuthInput): Promise<AuthType | null> {
+  async login(input: AuthInput): Promise<AuthType | null> {
     console.log(input);
 
     const user = await this.userService.findByEmail(input.email);
+    console.log(user);
 
     const isValidPassword = user && compareSync(input.password, user.password);
 

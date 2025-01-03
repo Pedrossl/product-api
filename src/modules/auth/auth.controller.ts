@@ -8,10 +8,10 @@ import { IsPublic } from 'src/common/decorators/isPublic.decorator';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
   @IsPublic()
-  public async authenticated(@Body() data: AuthInput): Promise<AuthType> {
-    const response = await this.authService.validateUser(data);
+  @Post()
+  public async login(@Body() data: AuthInput): Promise<AuthType> {
+    const response = await this.authService.login(data);
     return {
       user: response.user,
       token: response.token,
