@@ -3,7 +3,8 @@ import { ProductService } from './product.service';
 import { Product } from './entities/product.entity';
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
-import { ProductDTO } from './dto/product.dto';
+import { ProductDTO, ProductPageDTO } from './dto/product.dto';
+import { OffsetPagingInput } from 'src/common/pagination/dto/offset-paging.input';
 
 @Resolver(() => Product)
 export class ProductResolver {
@@ -13,12 +14,15 @@ export class ProductResolver {
   async createProduct(
     @Args('input') createProductInput: CreateProductInput,
   ): Promise<ProductDTO> {
-    return this.productService.create(createProductInput);
+    return await this.productService.create(createProductInput);
   }
 
-  @Query(() => [ProductDTO], { name: 'findAllProducts' })
-  async findAll(): Promise<ProductDTO[]> {
-    return this.productService.findAll();
+  @Query(() => ProductPageDTO)
+  async findAllProducts(
+    @Args('paging', { type: () => OffsetPagingInput, nullable: true })
+    paging: OffsetPagingInput,
+  ): Promise<ProductPageDTO> {
+    return this.productService.findAll(paging);
   }
 
   @Query(() => ProductDTO, { name: 'findProductById' })
@@ -35,10 +39,10 @@ export class ProductResolver {
     return this.productService.update(updateProductInput);
   }
 
-  // @Mutation(() => Product, { name: 'removeProduct' })
-  // async removeProduct(
-  //   @Args('id', { type: () => ID }) id: string,
-  // ): Promise<ProductDTO> {
-  //   return this.productService.remove(id);
-  // }
+  @Mutation(() => Boolean, { name: 'removeProduct' })
+  async removeProduct(
+    @Args('id', { type: () => ID }) id: string,
+  ): Promise<boolean> {
+    return this.productService.delete(id);
+  }
 }
