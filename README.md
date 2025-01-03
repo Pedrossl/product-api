@@ -79,39 +79,6 @@ Authorization: Bearer <token>
 
 ---
 
-## **Pagination**
-The API supports pagination with optional `offset` and `limit` parameters:
-
-**Request Example**:
-```
-GET /products?offset=0&limit=10
-```
-
-**Response Example**:
-```json
-{
-  "nodes": [
-    {
-      "id": "123e4567-e89b-12d3-a456-426614174000",
-      "name": "Product A",
-      "price": 12.99
-    },
-    {
-      "id": "123e4567-e89b-12d3-a456-426614174001",
-      "name": "Product B",
-      "price": 15.99
-    }
-  ],
-  "pageInfo": {
-    "hasNextPage": true,
-    "hasPreviousPage": false,
-    "totalCount": 20
-  }
-}
-```
-
----
-
 ## **Swagger**
 Interactive documentation is available at:
 ```
@@ -124,21 +91,6 @@ http://localhost:4000/docs
 GraphQL interface is available at:
 ```
 http://localhost:4000/graphql
-```
-
----
-
-## **Project Structure**
-```
-src/
-├── app.module.ts         # Root module
-├── main.ts               # Application bootstrap
-├── modules/              # Application modules
-│   ├── auth/             # Authentication module
-│   ├── user/             # User module
-│   ├── products/         # Products module
-├── common/               # Shared utilities and constants
-├── database/             # Database configuration and migrations
 ```
 
 ---
