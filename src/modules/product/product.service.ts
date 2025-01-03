@@ -55,8 +55,6 @@ export class ProductService {
   }
 
   async update(input: UpdateProductInput): Promise<ProductDTO> {
-    console.log(input);
-
     const product = await this.productRepository.findOne({
       where: { id: input.id },
     });
