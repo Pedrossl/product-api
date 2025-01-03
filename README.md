@@ -1,99 +1,215 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# **Project Documentation: Product API**
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## **Overview**
+The **Product API** is a service developed in **NestJS** utilizing **TypeORM** and **PostgreSQL** to manage products, categories, and prices. The API supports authentication with **JWT** and provides full CRUD functionality for managing users and products. The application also includes pagination support and interactive documentation with **Swagger**.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## **Technologies Used**
+- **NestJS**: Framework for building scalable and structured APIs.
+- **TypeORM**: ORM for database manipulation.
+- **GraphQL** and **REST**: Protocols used for communication in endpoints.
+- **PostgreSQL**: Relational database.
+- **Docker**: Container management for environment setup.
+- **Swagger**: Interactive documentation for the REST API.
+- **JWT (JSON Web Token)**: Secure authentication.
 
-## Project setup
+---
 
-```bash
-$ npm install
+## **Installation**
+### **Using Docker**
+1. Ensure Docker is installed.
+2. Rename the `.env.example` file to `.env`:
+3. Update the environment variables in the `.env` file as needed:
+   ```
+   API_PORT=4000
+   DB_HOST=postgres
+   DB_PORT=5432
+   DB_USERNAME=postgres
+   DB_PASSWORD=secret
+   DB_NAME=product_api
+   JWT_SECRET=your_jwt_secret
+   ```
+4. Start the containers using Docker Compose:
+   ```bash
+   docker-compose up --build
+   ```
+5. The API will be accessible at `http://localhost:4000`.
+
+---
+
+## **Endpoints**
+
+All endpoints, queries and mutations are in the Product_Endpoints.json file
+
+### **Auth**
+| Method | Endpoint   | Description                              |
+|--------|------------|------------------------------------------|
+| POST   | `/auth`    | Authenticates a user and returns a JWT.  |
+
+**Request Body Example**:
+```json
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
 ```
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+### **User**
+| Method | Endpoint       | Description                              |
+|--------|----------------|------------------------------------------|
+| GET    | `/users`       | Returns a list of users.                |
+| POST   | `/users`       | Creates a new user.                     |
+| GET    | `/users/:id`   | Retrieves information of a specific user. |
+| PATCH  | `/users/:id`   | Updates user data.                      |
+| DELETE | `/users/:id`   | Removes a user.                         |
 
-# watch mode
-$ npm run start:dev
+---
 
-# production mode
-$ npm run start:prod
+## **Authentication**
+Protected endpoints require a JWT token in the request header:
+
+**Header Example**:
+```
+Authorization: Bearer <token>
 ```
 
-## Run tests
+---
 
-```bash
-# unit tests
-$ npm run test
+## **Pagination**
+The API supports pagination with optional `offset` and `limit` parameters:
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+**Request Example**:
+```
+GET /products?offset=0&limit=10
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g mau
-$ mau deploy
+**Response Example**:
+```json
+{
+  "nodes": [
+    {
+      "id": "123e4567-e89b-12d3-a456-426614174000",
+      "name": "Product A",
+      "price": 12.99
+    },
+    {
+      "id": "123e4567-e89b-12d3-a456-426614174001",
+      "name": "Product B",
+      "price": 15.99
+    }
+  ],
+  "pageInfo": {
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "totalCount": 20
+  }
+}
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## **Swagger**
+Interactive documentation is available at:
+```
+http://localhost:4000/docs
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+---
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## **GraphQL Playground**
+GraphQL interface is available at:
+```
+http://localhost:4000/graphql
+```
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## **Project Structure**
+```
+src/
+├── app.module.ts         # Root module
+├── main.ts               # Application bootstrap
+├── modules/              # Application modules
+│   ├── auth/             # Authentication module
+│   ├── user/             # User module
+│   ├── products/         # Products module
+├── common/               # Shared utilities and constants
+├── database/             # Database configuration and migrations
+```
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## **GraphQL Mutations and Queries**
 
-## License
+### **Products**
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+| Name               | Type     | Description                          |
+|--------------------|----------|--------------------------------------|
+| `createProduct`    | Mutation | Creates a new product.              |
+| `findAllProducts`  | Query    | Lists all products with pagination. |
+| `findProductById`  | Query    | Retrieves a product by ID.          |
+| `updateProduct`    | Mutation | Updates an existing product.        |
+| `removeProduct`    | Mutation | Removes a product by ID.            |
+
+### Example Mutation to Create Product
+The price should be sent in cents as it is an integer type.
+```graphql
+mutation {
+  createProduct(input: {
+    name: "Product A",
+    category: FOOD,
+    price: 1299
+  }) {
+    id
+    name
+    price
+  }
+}
+```
+
+### Example Query to List Products
+```graphql
+query {
+  findAllProducts(paging: {
+    offset: 0,
+    limit: 10
+  }) {
+    nodes {
+      id
+      name
+      price
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      totalCount
+    }
+  }
+}
+```
+
+### Example Mutation to Update Product
+```graphql
+mutation {
+  updateProduct(update: {
+    id: "123e4567-e89b-12d3-a456-426614174000",
+    name: "Updated Product A",
+    price: 1599
+  }) {
+    id
+    name
+    price
+  }
+}
+```
+
+### Example Mutation to Remove Product
+```graphql
+mutation {
+  removeProduct(id: "123e4567-e89b-12d3-a456-426614174000")
+}
+```

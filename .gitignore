@@ -3,6 +3,9 @@
 /node_modules
 /build
 
+# schemas graphql
+*.gql
+
 # Logs
 logs
 *.log
