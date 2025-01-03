@@ -1,12 +1,18 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
-import { IsEnum, IsInt, IsNotEmpty, IsString, Max } from 'class-validator';
+import {
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 import { CategoryEnum } from 'src/common/enuns/category.enum';
 
 @InputType('CreateProductInput')
 export class CreateProductInput {
   @Field(() => String)
   @IsString()
-  @Max(100)
+  @MaxLength(100)
   @IsNotEmpty({
     message: 'The "name" field cannot be empty',
   })
