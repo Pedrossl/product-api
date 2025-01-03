@@ -4,9 +4,11 @@ import { BaseEntity } from 'src/modules/bases/entities/base.entity';
 import { Column, Entity } from 'typeorm';
 
 @ObjectType()
-@Entity()
+@Entity('user')
 export class User extends BaseEntity {
-  @Column()
+  @Column({
+    unique: true,
+  })
   @Field(() => String)
   email: string;
 
