@@ -31,7 +31,9 @@ services:
       POSTGRES_DB: ${DB_NAME}
       PG_DATA: /var/lib/postgresql/data
     ports:
-      - 5434:5432
+      - ${DB_PORT}:5432
+    expose:
+      - ${DB_PORT}
     volumes:
       - api_db_data:/var/lib/postgresql/data
 networks:
