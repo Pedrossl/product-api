@@ -1,11 +1,17 @@
+import { Field, InputType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
-export class AuthInput {
+@InputType()
+export class CreateUserInput {
+  @Field(() => String)
   @IsEmail()
-  @IsString()
   @Transform(({ value }) => value.toLowerCase())
+  @MaxLength(100)
+  @IsNotEmpty({
+    message: 'The "email" field cannot be empty',
+  })
   @ApiProperty({
     example: 'email@email.com',
     description: 'User email',
@@ -14,7 +20,11 @@ export class AuthInput {
   })
   email: string;
 
+  @Field(() => String)
   @IsString()
+  @IsNotEmpty({
+    message: 'The "password" field cannot be empty',
+  })
   @ApiProperty({
     example: '123456',
     description: 'User password',
