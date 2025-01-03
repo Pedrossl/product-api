@@ -6,6 +6,7 @@ import { compareSync } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../user/entities/user.entity';
 import { INVALID_CREDENTIALS } from 'src/common/constants/error.constants';
+import { UserLoginDTO } from '../user/dto/user-login.dto';
 
 @Injectable()
 export class AuthService {
@@ -15,10 +16,7 @@ export class AuthService {
   ) {}
 
   async login(input: AuthInput): Promise<AuthType | null> {
-    console.log(input);
-
     const user = await this.userService.findByEmail(input.email);
-    console.log(user);
 
     const isValidPassword = user && compareSync(input.password, user.password);
 
@@ -27,8 +25,11 @@ export class AuthService {
     }
 
     const token = await this.jwtToken(user);
+    const userDTO: UserLoginDTO = {
+      email: user.email,
+    };
     return {
-      user,
+      user: userDTO,
       token,
     };
   }
